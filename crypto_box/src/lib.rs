@@ -191,13 +191,12 @@
 #![warn(missing_docs, rust_2018_idioms)]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
-pub use rand_core;
 pub use xsalsa20poly1305::{aead, generate_nonce};
 
 use chacha20::hchacha;
 use chacha20poly1305::XChaCha20Poly1305;
 use core::fmt::{self, Debug};
-use rand_core::{CryptoRng, RngCore};
+
 use salsa20::hsalsa20;
 use x25519_dalek::{x25519, X25519_BASEPOINT_BYTES};
 use xsalsa20poly1305::aead::{
@@ -228,13 +227,12 @@ pub struct SecretKey([u8; KEY_SIZE]);
 
 impl SecretKey {
     /// Generate a random [`SecretKey`].
-    pub fn generate<T>(csprng: &mut T) -> Self
-    where
-        T: RngCore + CryptoRng,
-    {
-        let mut bytes = [0u8; KEY_SIZE];
-        csprng.fill_bytes(&mut bytes);
-        SecretKey(bytes)
+    pub fn generate<T>(_csprng: &mut T) -> Self {
+        let mut _bytes = [0u8; KEY_SIZE];
+        if _bytes[0] == 0 {
+            panic!("can't generate secret keys");
+        }
+        SecretKey(_bytes)
     }
 
     /// Get the [`PublicKey`] which corresponds to this [`SecretKey`]
